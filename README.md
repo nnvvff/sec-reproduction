@@ -59,7 +59,7 @@ The bundled results were generated on **2026-10-30**, before this entry-point si
 | SEC/SC | 59.00 ± 5.40 | 61.7 ± 2.5 | 54.32 ± 2.74 | 55.1 ± 1.8 |
 | SEC/LR | 69.66 ± 5.09 | 71.0 ± 2.5 | 62.41 ± 3.74 | 62.9 ± 1.9 |
 
-**The SEC test means are close to the paper:** SEC/SC is **0.78 percentage points** lower and SEC/LR is **0.49 points** lower. The method ordering agrees; training means differ more and our variability is larger. This is numerical agreement, not statistical equivalence.
+**The SEC test means are close to the paper:** SEC/SC is **0.78 percentage points** lower and SEC/LR is **0.49 points** lower. SEC/LR has the highest test ACC in both comparisons. Training means differ more and our variability is larger. This is numerical agreement, not statistical equivalence.
 
 ![MNIST test accuracy compared with the paper](figures/mnist_test.png)
 
