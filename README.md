@@ -2,16 +2,26 @@
 
 Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
 
+## Repository structure
+
+Core algorithms are in `sec/`; the root scripts prepare data and run experiments. Saved MNIST results and figures are included for inspection without retraining.
+
+```text
+sec/                   SEC implementation, baselines and utilities
+prepare_datasets.py    Download and prepare data
+run_benchmark.py       Run fixed baselines
+run_cv_benchmark.py    Run SEC with training-internal CV
+demo.py               Small offline example
+tests/                Implementation and protocol checks
+results/mnist/        Saved scores and experiment configurations
+make_figures.py       Rebuild the result table and figures
+figures/              Comparison plots
+docs/                 Provenance, environment and verification
+```
+
 ## 1. Reproduction code
 
 The implementation covers **SEC/SC**, **SEC/LR**, spectral rotation and prediction for unseen samples. SEC combines a local structure term with global regression; the two variants use a graph Laplacian and local regression, respectively. KMeans and SC+ridge serve as baselines.
-
-| File | Purpose |
-|---|---|
-| [`sec/model.py`](sec/model.py) | Core SEC implementation |
-| [`run_benchmark.py`](run_benchmark.py) | Fixed baselines |
-| [`run_cv_benchmark.py`](run_cv_benchmark.py) | SEC with training-internal cross-validation |
-| [`results/mnist/`](results/mnist/) | Saved scores and experiment configurations |
 
 **Install and check** using Python 3.10–3.13:
 
@@ -60,4 +70,4 @@ ACC below is **mean ± standard deviation (%)** across all 20 splits; our SD use
 
 **Scope:** MNIST was selected from completed experiments as a teaching case with close test means; no random split was discarded. Inner validation labels select SEC parameters, while outer test data are excluded from selection. This is an explicit replacement CV protocol because the authors' full CV and preprocessing details were not recovered—not an exact or official reproduction. [Provenance](docs/PROVENANCE.md).
 
-AI assistance was used for implementation, checks and repository preparation. No software license has been selected; datasets and the paper PDF are not bundled.
+No software license has been selected; datasets and the paper PDF are not bundled.
