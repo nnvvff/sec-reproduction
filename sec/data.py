@@ -1,37 +1,33 @@
-"""Full UCI Optdigits (5620), not sklearn.load_digits() (1797)."""
-
+"""Download and load the full MNIST archive used by the experiment."""
 import hashlib
-import io
-import json
 from pathlib import Path
 import urllib.request
-import zipfile
-
 import numpy as np
 
-URL = "https://archive.ics.uci.edu/static/public/80/optical%2Brecognition%2Bof%2Bhandwritten%2Bdigits.zip"
+URL = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz"
+SHA256 = "731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1"
 
 
-def load_optdigits(directory):
+def load_mnist(directory):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
-    archive = directory / "optdigits-uci.zip"
+    archive = directory / "mnist.npz"
     if not archive.exists():
-        # Download only data; no archive extraction or execution.
+        print("Downloading MNIST...", flush=True)
         with urllib.request.urlopen(URL, timeout=60) as response:
             content = response.read()
-        with zipfile.ZipFile(io.BytesIO(content)) as z:
-            if not {"optdigits.tra", "optdigits.tes"}.issubset(z.namelist()):
-                raise ValueError("Unexpected UCI archive")
-        archive.write_bytes(content)
-    with zipfile.ZipFile(archive) as z:
-        arrays = [np.loadtxt(io.BytesIO(z.read(name)), delimiter=",")
-                  for name in ("optdigits.tra", "optdigits.tes")]
-    data = np.concatenate(arrays)
-    if data.shape != (5620, 65) or not np.isfinite(data).all():
-        raise ValueError(f"Expected full Optdigits shape (5620, 65), got {data.shape}")
-    metadata = {"url": URL, "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
-                "shape": list(data.shape), "order": ["optdigits.tra", "optdigits.tes"],
-                "preprocessing": "raw 0..16 features; train-only centering inside SEC"}
-    (directory / "provenance.json").write_text(json.dumps(metadata, indent=2) + "\n")
-    return data[:, :-1], data[:, -1].astype(int), metadata
+        if hashlib.sha256(content).hexdigest() != SHA256:
+            raise ValueError("MNIST download checksum mismatch")
+        temporary = archive.with_suffix(".tmp")
+        temporary.write_bytes(content)
+        temporary.replace(archive)
+    if hashlib.sha256(archive.read_bytes()).hexdigest() != SHA256:
+        raise ValueError("MNIST archive checksum mismatch")
+    with np.load(archive, allow_pickle=False) as data:
+        X = np.concatenate([data["x_train"], data["x_test"]]).reshape(70000, 784)
+        y = np.concatenate([data["y_train"], data["y_test"]])
+    if X.shape != (70000, 784) or y.shape != (70000,) or len(np.unique(y)) != 10:
+        raise ValueError("Unexpected MNIST dimensions or class count")
+    if not np.isfinite(X).all() or not np.isfinite(y).all():
+        raise ValueError("Nonfinite MNIST data")
+    return X, y
