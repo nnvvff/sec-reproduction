@@ -1,23 +1,63 @@
-# Spectral Embedded Clustering (SEC)
+# Spectral Embedded Clustering: MNIST reproduction
 
-An independent Python implementation and reproduction of **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, Nie et al., *IEEE Transactions on Neural Networks*, 22(11), 1796–1808, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000) · [Author publication record](https://opus.lib.uts.edu.au/handle/10453/29713).
+An independent Python implementation of **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, Nie et al., *IEEE Transactions on Neural Networks*, 22(11), 1796–1808, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000) · [Publication record](https://opus.lib.uts.edu.au/handle/10453/29713).
 
-This course project demonstrates SEC/SC and SEC/LR, including spectral rotation and prediction for unseen samples. **It is not the authors' official code, and it does not claim an exact numerical reproduction.** Optdigits is the main example; an eight-dataset result table is included as a supplement.
+This course repository presents **one MNIST experiment**: SEC/SC, SEC/LR and two simple baselines, using all 20 existing random splits. MNIST was selected from the completed experiments as a compact teaching example with test means close to the paper; it is not evidence that every dataset was reproduced equally closely. This is an independent implementation, not official author code or an exact numerical reproduction.
 
-## What SEC does
+## Method
 
-Standard spectral clustering constructs an embedding for the training samples but does not directly provide a function for new samples. SEC combines a local structure term with a global regression term. The embedding is obtained from the smallest eigenvectors, discretized by spectral rotation, and approximated by a learned affine predictor for unseen samples.
+SEC combines a local structure term with a global regression term. It computes a spectral embedding for training samples, discretizes it by spectral rotation, and learns an affine predictor for unseen samples.
 
-- **SEC/SC:** local structure comes from a normalized spectral graph Laplacian.
-- **SEC/LR:** local structure comes from local ridge regressions.
-- **SC+ridge:** SC embedding with the same regression extension, implemented by setting SEC's coupling parameter μ to zero.
-- **KMeans:** a simple comparison baseline, predicting with the nearest fitted center.
+- **SEC/SC:** local structure is a normalized graph Laplacian.
+- **SEC/LR:** local structure is derived from local ridge regressions.
+- **SC+ridge:** SC with SEC's regression extension, implemented by setting μ to zero. It corresponds to SC in paper Table II and SEC/SC (μ → 0) in Table III.
+- **KMeans:** clustering and nearest-center prediction as a baseline.
 
-The core implementation is in [`sec/model.py`](sec/model.py). Input arrays use samples in rows. Predictions are cluster IDs, not semantic class labels.
+[`sec/model.py`](sec/model.py) contains the core implementation. Arrays use samples in rows, and predictions are cluster IDs.
 
-## Install and run a small example
+## Results and comparison with the paper
 
-Run from the repository root. Use Python 3.10–3.13; the original experiment used Python 3.10.12 and the release checks used Python 3.13.5. A fresh environment is recommended.
+The results below were generated on **2026-10-30**. Each entry is **mean ± standard deviation**, in percent, over 20 random partitions. Our SD uses `ddof=1`. Paper references were checked against the MNIST rows of Tables II and III. All splits are retained; no best seed is selected.
+
+| Method | Our train ACC | Paper train ACC | Our test ACC | Paper test ACC |
+|---|---:|---:|---:|---:|
+| KMeans | 52.99 ± 2.34 | 53.2 ± 2.3 | 52.71 ± 1.99 | 52.8 ± 1.8 |
+| SC+ridge | 61.62 ± 3.23 | 61.7 ± 2.5 | 54.90 ± 2.20 | 55.1 ± 1.8 |
+| SEC/SC | 59.00 ± 5.40 | 61.7 ± 2.5 | 54.32 ± 2.74 | 55.1 ± 1.8 |
+| SEC/LR | 69.66 ± 5.09 | 71.0 ± 2.5 | 62.41 ± 3.74 | 62.9 ± 1.9 |
+
+**Our held-out SEC results are close to the paper's reported means:** SEC/SC achieves **54.32% versus 55.1%** (0.78 percentage points lower), and SEC/LR achieves **62.41% versus 62.9%** (0.49 points lower). Both reproduce the reported ordering: SEC/LR performs better than SEC/SC on MNIST. This is descriptive numerical agreement, not a claim of statistical equivalence.
+
+![MNIST held-out accuracy compared with the paper](figures/mnist_test.png)
+
+*Mean ± SD for our complete 20-split experiment and the paper. Our partitions were generated independently; the authors' split indices were unavailable. Error bars are not confidence intervals.*
+
+![MNIST training accuracy compared with the paper](figures/mnist_train.png)
+
+*Training results are shown separately: SEC/SC is 59.00% versus 61.7%, and SEC/LR is 69.66% versus 71.0%. Our observed variability is larger. The closeness claim above concerns the test means, not identical distributions or training scores.*
+
+[Per-split scores](results/mnist/runs.csv) · [Summary CSV](results/mnist/summary.csv) · [Paper values](results/mnist/paper_reference.json). SVG/PDF copies of both figures are in [`figures/`](figures/).
+
+## Actual experiment environment
+
+These are the versions used to generate the reported results, as saved in the experiment configurations:
+
+| Component | Experiment setting |
+|---|---|
+| Execution | CPU, one numerical-library thread per fit; no GPU training |
+| Python | 3.10.12 |
+| NumPy | 2.1.3 |
+| SciPy | 1.15.3 |
+| scikit-learn | 1.6.1 |
+| BLAS | OpenBLAS 0.3.27, recorded in the full-run resource report |
+| Available logical CPUs | 16, recorded in the full-run resource report |
+| Operating system | Linux x86_64; the same environment's preceding record reports kernel 5.15.0-191-generic and glibc 2.35 |
+
+The OS record was captured one day before the full run; the run configuration itself does not record OS or CPU model. A specific CPU model is therefore not asserted. [Environment evidence](docs/EXPERIMENT_ENVIRONMENT.json) distinguishes these sources. **Local packaging checks used macOS and Python 3.13.5**, not the result-generating environment; their [package list](docs/VALIDATION_ENVIRONMENT.txt) and [verification notes](docs/VERIFICATION.md) are separate.
+
+## Install and verify
+
+Use Python 3.10–3.13. Run from the repository root:
 
 ```bash
 python3.13 -m venv .venv
@@ -25,109 +65,63 @@ source .venv/bin/activate
 python -m pip install -r requirements-data.txt
 python demo.py
 python -m pytest -q
-```
-
-`demo.py` runs both SEC variants on 300 generated samples, reports train/test ACC and eigen residuals, and needs no download. It checks the fitting/prediction path; its scores are not the Optdigits results below. The test suite checks the mathematical operators, prediction and save/load behavior, CV selection boundary, and cached/direct equivalence on small inputs.
-
-Use the equivalent path to your Python 3.10–3.13 interpreter if it is not named `python3.13`. The pinned original dependencies are not intended for Python 3.14.
-
-## Main result: Optdigits
-
-All scores below come from the completed **2026-10-30 experiment**, using 20 shared random outer splits, 3,372 training and 2,248 held-out samples per split, and 50 initializations per fit. SEC uses 3-fold CV inside the training set; KMeans and SC+ridge are fixed baselines. Entries are **mean ± sample standard deviation**, in percentage points.
-
-| Method | Train ACC (%) | Test ACC (%) |
-|---|---:|---:|
-| KMeans | 79.40 ± 0.63 | 79.42 ± 0.79 |
-| SC+ridge | 88.57 ± 4.82 | 83.36 ± 4.42 |
-| SEC/SC | 88.56 ± 4.82 | 83.32 ± 4.42 |
-| SEC/LR | 89.65 ± 4.26 | 84.80 ± 3.81 |
-
-![Training accuracy on Optdigits](figures/optdigits_train.png)
-
-*Training embedding quality: SEC/LR has the highest mean among these four methods. Error bars show variation across all 20 splits; no seed was selected for display.*
-
-![Held-out accuracy on Optdigits](figures/optdigits_test.png)
-
-*Unseen-sample prediction: SEC/LR has the highest held-out mean among these four methods. SEC/SC and SC+ridge are very close. These descriptive comparisons do not establish statistical significance. Error bars are standard deviations, not confidence intervals.*
-
-The paper reports Optdigits test means of **86.00% for SEC/SC and 90.00% for SEC/LR**, compared with **83.32% and 84.80%** here. The author data matrices, preprocessing and full CV details have not been recovered, so the cause of this gap is not established.
-
-The [80 per-split scores](results/optdigits/runs.csv), [numeric summary](results/optdigits/summary.csv), and [eight-dataset supplement](results/supplement/README.md) are included. Regenerate the presentation table and figures without fitting models:
-
-```bash
 python make_figures.py
 ```
 
-Editable SVG and vector PDF versions are in [`figures/`](figures/).
+Replace `python3.13` with the path to an installed Python 3.10–3.13 interpreter if needed. The pinned original dependencies are not intended for Python 3.14. `demo.py` is a small generated-data fit/predict check, not another reported experiment. `make_figures.py` rebuilds the MNIST comparison from saved scores without training. The retained suite has 49 tests; local environment warnings are documented in the verification notes.
 
-## Data and optional experiment reproduction
+## Data and optional rerun
 
-Download the full [UCI Optdigits dataset](https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits), containing 5,620 samples, 64 features and 10 classes. The loader concatenates `optdigits.tra` then `optdigits.tes`, retains raw 0–16 features, and creates new random seen/unseen splits. **This is not the original UCI classification split.** Data files are downloaded locally and are not included in Git.
+The preparation script downloads the [MNIST archive distributed by Keras](https://github.com/keras-team/keras/blob/master/keras/src/datasets/mnist.py), verifies its SHA-256, concatenates the original 60,000 training and 10,000 test images, and flattens each 28×28 image into 784 raw pixel values. No dataset or paper PDF is included. See [data preparation](DATASETS.md).
 
 ```bash
-python prepare_datasets.py optdigits
+python prepare_datasets.py mnist
 ```
 
-The following commands reproduce the main table's protocol. They are optional, computationally substantial experiments; they were **not rerun when preparing this repository**. Keep the two output folders distinct and use new folders for new configurations.
+The experiment uses **3,500 seen samples (5%) and 66,500 unseen samples (95%)** per random partition of the full 70,000 images. This is not the standard 60,000/10,000 classification split. Optional commands to rerun the declared protocol:
 
 ```bash
-python run_benchmark.py --datasets optdigits --methods KMeans SC+ridge \
+python run_benchmark.py --datasets mnist --methods KMeans SC+ridge \
   --splits 20 --n-init 50 --seed 20261029 --threads 1 \
-  --output outputs/optdigits_fixed
+  --output outputs/mnist_fixed
 
-python run_cv_benchmark.py --datasets optdigits --methods SEC/SC SEC/LR \
+python run_cv_benchmark.py --datasets mnist --methods SEC/SC SEC/LR \
   --splits 20 --cv-folds 3 --n-init 50 --seed 20261029 --threads 1 \
-  --output outputs/optdigits_cv
+  --output outputs/mnist_cv
 ```
 
-Each runner writes configurations, per-split metrics, model checkpoints and predictions. Add `--resume` only with identical data, source and settings. Reproduction means rerunning the declared protocol; different Python/BLAS platforms need not yield identical floating-point results. Dense eigenproblems use quadratic memory and roughly cubic time in the number of training samples.
+These are computationally substantial runs and were **not re-executed for packaging**. Use fresh output folders; add `--resume` only with identical source, data and settings. The runners save configuration, splits, metrics, predictions and models. Dense eigenproblems use quadratic memory and roughly cubic time in the training sample count. Floating-point outcomes can vary across platforms.
 
-## Protocol and limits
+## Protocol and reproduction boundary
 
-- Outer seeds are `20261029 + split`, for split indices 0–19, with non-stratified random 60/40 partitions on Optdigits.
-- Inner CV uses shuffled, non-stratified 3-fold KFold, mean validation clustering ACC, and the first candidate on an exact tie. SEC's μ grid is `1e-9, 1e-6, 1e-3, 1, 1e3, 1e6, 1e9, 1e12, 1e15`.
-- **Inner validation labels select parameters. Outer test features and labels do not enter SEC selection.** This is an explicit replacement for the authors' incompletely specified CV procedure, not fully label-free tuning.
-- Features remain raw; centering and fitted transformations use the applicable training partition. The SC graph uses a symmetric union of 5-neighbor edges, with self-tuning scale at the seventh other neighbor. LR uses the center plus four neighbors; these unresolved conventions are disclosed implementation choices.
-- All 50 initializations are compared by the optimization objective, not by ground-truth ACC. Every outer split is retained. Clustering ACC uses a separate Hungarian label alignment on each evaluation partition; it is not fixed-label classification accuracy.
-- Training `labels_` discretize the fitted spectral embedding. `predict(X)` uses its regression approximation, so `predict(X_train)` need not equal `labels_`.
-- This release contains one protocol's results. Historical fixed-μ sweeps are excluded. Nyström code remains as supporting baseline functionality, but Nyström results are excluded: the original full run used test-label bandwidth selection on five datasets, which is an oracle comparison rather than independent test evaluation.
+- Outer partitions are non-stratified, using seeds `20261029 + split` for split 0–19. All four methods share them and use 50 initializations per fit, selected by optimization objective rather than ground-truth ACC.
+- SEC selects μ using shuffled, non-stratified 3-fold CV inside the seen data. The MNIST grid is `1e-9, 1e-6, 1e-3, 1, 1e3, 1e6, 1e9`; the largest mean validation ACC wins, with the first candidate on an exact tie.
+- **Inner validation labels are used for tuning; outer test features and labels do not enter SEC selection.** This is an explicit replacement for the authors' incompletely specified CV, not a recovery of their exact procedure. Original author data matrices and preprocessing were not authenticated.
+- Inputs retain raw 0–255 pixels. Centering uses the relevant training partition. SC uses a symmetric union 5-neighbor graph with seventh-neighbor self-tuning scale; LR uses the center plus four neighbors. These are explicit implementation conventions.
+- ACC uses an independent Hungarian label alignment for each evaluated partition, not a fixed-label classification mapping. Training `labels_` discretize the spectral embedding; `predict(X)` uses its regression approximation.
 
-See [data sources](DATASETS.md), [result provenance and release scope](docs/PROVENANCE.md), and [verification](docs/VERIFICATION.md).
+## Files and attribution
 
-## Project structure
+| Location | Purpose |
+|---|---|
+| `sec/` | Unchanged SEC implementation and supporting baseline/CV utilities |
+| `demo.py`, `tests/` | Lightweight verification |
+| `prepare_datasets.py` | Data acquisition and provenance |
+| `run_benchmark.py`, `run_cv_benchmark.py` | Experiment entry points |
+| `results/mnist/` | This single experiment's scores, reference values and original configs |
+| `make_figures.py`, `figures/` | Reproducible figures and table |
+| `docs/` | [Provenance](docs/PROVENANCE.md), environment and verification |
 
-```text
-sec/                    SEC, baselines, metrics, CV and checkpoint utilities
-demo.py                 Small offline fit/predict example
-prepare_datasets.py     Download and prepare documented datasets
-run_benchmark.py        Fixed baseline experiments
-run_cv_benchmark.py     Training-only parameter selection and final fits
-paper_protocol.py       Dataset settings and paper reference numbers
-make_figures.py         Rebuild figures and table from saved scores
-tests/                  Selected existing mathematical/protocol tests
-results/optdigits/      Main scores and original configuration records
-results/supplement/     Eight-dataset summary and per-split scores
-figures/                PNG, SVG and PDF figures
-docs/                   Provenance, source hashes and release verification
-```
+The copied core and experiment code are unchanged. Supporting code retains its existing generic dataset/method options, but this repository's presentation includes only the MNIST case study.
 
-## AI assistance and reuse
-
-Codex/AI assistance was used in developing and checking the implementation and experiment tooling, and in preparing this repository, documentation and figures. This is not a claim of unaided student authorship. The repository does not assert compliance with an unspecified course AI policy; any required course disclosure should accompany the submission.
-
-No software license has been selected for this repository. Dataset and paper rights remain with their respective owners; neither the paper PDF nor dataset files are bundled.
-
-## Citation
+Codex/AI assistance was used in implementation/tooling development and checks, and in preparing documentation, packaging and figures. This is not a claim of unaided student authorship or of compliance with an unspecified course AI policy. No software license has been selected; dataset and paper rights remain with their owners.
 
 ```bibtex
 @article{nie2011spectral,
   author = {Nie, Feiping and Zeng, Zinan and Tsang, Ivor W. and Xu, Dong and Zhang, Changshui},
   title = {Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering},
   journal = {IEEE Transactions on Neural Networks},
-  year = {2011},
-  volume = {22},
-  number = {11},
-  pages = {1796--1808},
+  year = {2011}, volume = {22}, number = {11}, pages = {1796--1808},
   doi = {10.1109/TNN.2011.2162000}
 }
 ```

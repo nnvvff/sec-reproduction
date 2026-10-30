@@ -1,17 +1,17 @@
 {
-  "dataset": "optdigits",
-  "data_sha256": "dc47dc0aa8aad42c8ebfee59916b1ae152976b90e58456f3539744b82561380e",
+  "dataset": "mnist",
+  "data_sha256": "409118efb571f49d8bd67c1a87ec7c7569959ae3f34256db2a6238c20aeb11dd",
   "protocol": {
     "shape": [
-      5620,
-      64
+      70000,
+      784
     ],
     "clusters": 10,
-    "fraction": 0.6,
-    "mu_sc": 1e-06,
-    "mu_lr": 0.001,
-    "dkm_gamma": 1e-06,
-    "clgr_eta": 1
+    "fraction": 0.05,
+    "mu_sc": 0.001,
+    "mu_lr": 1e-09,
+    "dkm_gamma": 1e-09,
+    "clgr_eta": 1000.0
   },
   "selection_protocol": "seen-only-unstratified-kfold-validation-acc-v1",
   "cv_folds": 3,
@@ -58,18 +58,6 @@
         "parameter": 1000000000.0,
         "preprocessing": "raw",
         "kernel": null
-      },
-      {
-        "method": "SEC/SC",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
-      },
-      {
-        "method": "SEC/SC",
-        "parameter": 1000000000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
       }
     ],
     "SEC/LR": [
@@ -114,18 +102,6 @@
         "parameter": 1000000000.0,
         "preprocessing": "raw",
         "kernel": null
-      },
-      {
-        "method": "SEC/LR",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
-      },
-      {
-        "method": "SEC/LR",
-        "parameter": 1000000000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
       }
     ],
     "DKM": [
@@ -168,18 +144,6 @@
       {
         "method": "DKM",
         "parameter": 1000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
-      },
-      {
-        "method": "DKM",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": null
-      },
-      {
-        "method": "DKM",
-        "parameter": 1000000000000000.0,
         "preprocessing": "raw",
         "kernel": null
       }
@@ -249,18 +213,6 @@
       },
       {
         "method": "CLGR",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": "linear"
-      },
-      {
-        "method": "CLGR",
-        "parameter": 1000000000000000.0,
-        "preprocessing": "raw",
-        "kernel": "linear"
-      },
-      {
-        "method": "CLGR",
         "parameter": 1e-09,
         "preprocessing": "raw",
         "kernel": "cosine"
@@ -303,18 +255,6 @@
       },
       {
         "method": "CLGR",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": "cosine"
-      },
-      {
-        "method": "CLGR",
-        "parameter": 1000000000000000.0,
-        "preprocessing": "raw",
-        "kernel": "cosine"
-      },
-      {
-        "method": "CLGR",
         "parameter": 1e-09,
         "preprocessing": "raw",
         "kernel": "rbf"
@@ -352,18 +292,6 @@
       {
         "method": "CLGR",
         "parameter": 1000000000.0,
-        "preprocessing": "raw",
-        "kernel": "rbf"
-      },
-      {
-        "method": "CLGR",
-        "parameter": 1000000000000.0,
-        "preprocessing": "raw",
-        "kernel": "rbf"
-      },
-      {
-        "method": "CLGR",
-        "parameter": 1000000000000000.0,
         "preprocessing": "raw",
         "kernel": "rbf"
       }

@@ -1,0 +1,28 @@
+{
+  "experiment_date": "2026-10-30",
+  "execution": "CPU; no GPU training code or CUDA dependency",
+  "run_config": {
+    "python": "3.10.12",
+    "numpy": "2.1.3",
+    "scipy": "1.15.3",
+    "sklearn": "1.6.1",
+    "threads": 1,
+    "cv_folds": 3,
+    "n_init": 50,
+    "seed": 20261029
+  },
+  "recorded_prelaunch_resources": {
+    "logical_cpus": 16,
+    "blas": "OpenBLAS 0.3.27",
+    "source": "FULL_REVISION_RUN.md, resource and scheduling section"
+  },
+  "preceding_same_environment_record": {
+    "captured_utc": "2026-10-29T13:59:35.702530+00:00",
+    "platform": "Linux-5.15.0-191-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "numpy": "2.1.3",
+    "scipy": "1.15.3",
+    "sklearn": "1.6.1"
+  },
+  "limitations": "The platform record predates the full run by one day and is from the same Python environment identified in the launch record. The run config does not itself record the OS or CPU model. CPU model is not asserted."
+}

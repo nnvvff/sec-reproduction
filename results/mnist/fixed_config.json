@@ -1,61 +1,54 @@
 {
-  "dataset": "optdigits",
-  "data_sha256": "dc47dc0aa8aad42c8ebfee59916b1ae152976b90e58456f3539744b82561380e",
+  "dataset": "mnist",
+  "data_sha256": "409118efb571f49d8bd67c1a87ec7c7569959ae3f34256db2a6238c20aeb11dd",
   "data_metadata": {
-    "name": "optdigits",
+    "name": "mnist",
     "shape": [
-      5620,
-      64
+      70000,
+      784
     ],
     "n_classes": 10,
-    "dtype": "float64",
+    "dtype": "uint8",
     "range": [
       0.0,
-      16.0
+      255.0
     ],
     "class_counts": {
-      "0": 554,
-      "1": 571,
-      "2": 557,
-      "3": 572,
-      "4": 568,
-      "5": 558,
-      "6": 558,
-      "7": 566,
-      "8": 554,
-      "9": 562
+      "0": 6903,
+      "1": 7877,
+      "2": 6990,
+      "3": 7141,
+      "4": 6824,
+      "5": 6313,
+      "6": 6876,
+      "7": 7293,
+      "8": 6825,
+      "9": 6958
     },
     "sources": [
       {
-        "url": "https://archive.ics.uci.edu/static/public/80/optical%2Brecognition%2Bof%2Bhandwritten%2Bdigits.zip",
-        "sha256": "0d7b054fea010270e9b3f06411c654c5e59547732ad626381980baffe0a23fb0",
-        "shape": [
-          5620,
-          65
-        ],
-        "order": [
-          "optdigits.tra",
-          "optdigits.tes"
-        ],
-        "preprocessing": "raw 0..16 features; train-only centering inside SEC"
+        "url": "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz",
+        "local_archive": "data/downloads/mnist.npz",
+        "sha256": "731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1",
+        "primary_implementation": "https://github.com/keras-team/keras/blob/master/keras/src/datasets/mnist.py"
       }
     ],
-    "processing": "Concatenate UCI .tra then .tes, retain raw 0..16 values.",
-    "paper_correspondence": "Matches Table I sample count, dimension and classes. Exact author normalization is unspecified.",
-    "npz_sha256": "dc47dc0aa8aad42c8ebfee59916b1ae152976b90e58456f3539744b82561380e",
+    "processing": "Concatenate official 60k train then 10k test; C-order flatten 28x28, raw uint8 0..255.",
+    "paper_correspondence": "Full MNIST matches Table I. Keras distribution has pinned SHA-256. No resize or feature normalization.",
+    "npz_sha256": "409118efb571f49d8bd67c1a87ec7c7569959ae3f34256db2a6238c20aeb11dd",
     "prepared_date": "2026-10-29"
   },
   "protocol": {
     "shape": [
-      5620,
-      64
+      70000,
+      784
     ],
     "clusters": 10,
-    "fraction": 0.6,
-    "mu_sc": 1e-06,
-    "mu_lr": 0.001,
-    "dkm_gamma": 1e-06,
-    "clgr_eta": 1
+    "fraction": 0.05,
+    "mu_sc": 0.001,
+    "mu_lr": 1e-09,
+    "dkm_gamma": 1e-09,
+    "clgr_eta": 1000.0
   },
   "splits": 20,
   "n_init": 50,

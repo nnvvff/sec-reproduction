@@ -25,6 +25,7 @@
   "original_audit_sha256": "b1e7103798d010249338eb7a6ef18d4fc8a4b0945c43e3f0e92a34097bb44492",
   "original_runs_csv_sha256": "f4d005fc58a38437ef6cbf2c252fd48a6339f551269620a1bf477ac838782343",
   "original_summary_csv_sha256": "84011e2d8584696447175381d1dc409026b75562d19685b893bf984b84a6082e",
-  "packaging_verified_main_result_records": 1280,
-  "note": "Historical audit counts describe the completed experiment, not checks rerun for this release. Nystr\u00f6m results and historical fixed-parameter experiments are excluded from the published tables."
+  "packaging_verified_main_result_records": 80,
+  "note": "Only the MNIST case study is published: four methods, all 20 outer splits each. Historical audit counts cover the wider original run and are not new training.",
+  "published_dataset": "mnist"
 }
