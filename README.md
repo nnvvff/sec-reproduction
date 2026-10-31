@@ -67,8 +67,6 @@ Results are reported as mean ± standard deviation (%) over 20 random splits. Pa
 
 On MNIST, the same dataset used in the paper, our mean test accuracies are **0.78 percentage points** lower for SEC/SC and **0.49 points** lower for SEC/LR. These close test results provide additional evidence supporting the correctness of our reproduction.
 
-[Saved per-split scores](results/mnist/runs.csv) · [Saved summary](results/mnist/summary.csv).
-
 ## 5. Experiment environment
 
 **Environment for the saved results:** CPU execution, one numerical-library thread per fit; Python **3.10.12**, NumPy **2.1.3**, SciPy **1.15.3**, scikit-learn **1.6.1**, OpenBLAS **0.3.27**.
