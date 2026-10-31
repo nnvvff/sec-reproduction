@@ -1,5 +1,7 @@
 # Spectral Embedded Clustering: MNIST Reproduction
 
+Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
+
 ## 1. File structure
 
 ```text
@@ -11,8 +13,6 @@ outputs/           Your new results and resume state (created at runtime)
 ```
 
 ## 2. Installation and running
-
-Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
 
 The experiment runs **SEC/SC and SEC/LR**, the two SEC variants reproduced here. SEC combines local structure with global regression to cluster training samples and predict clusters for unseen samples.
 
