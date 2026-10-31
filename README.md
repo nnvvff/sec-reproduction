@@ -60,7 +60,7 @@ A full run performs 880 fits, including inner CV, and can take substantial CPU t
 
 ## 4. Results and paper comparison
 
-The bundled results were generated on **2026-10-30**, before this entry-point simplification. Entries are **mean ± standard deviation (%)** over all 20 random splits; our SD uses `ddof=1`. Paper references are from Tables II and III.
+Results are reported as mean ± standard deviation (%) over 20 random splits. Paper results are taken from Tables II and III.
 
 | Method | Our train ACC | Paper train ACC | Our test ACC | Paper test ACC |
 |---|---:|---:|---:|---:|
