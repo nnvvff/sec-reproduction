@@ -1,7 +1,5 @@
 # Spectral Embedded Clustering: MNIST Reproduction
 
-Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
-
 ## 1. File structure
 
 ```text
@@ -14,6 +12,8 @@ outputs/           Your new results and resume state (created at runtime)
 ```
 
 ## 2. Installation and running
+
+Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
 
 The experiment compares **KMeans, SC+ridge, SEC/SC and SEC/LR**. SEC combines local structure with global regression to cluster training samples and predict clusters for unseen samples. SC+ridge uses SEC/SC with μ = 0.
 
@@ -31,7 +31,7 @@ python -m pip install -r requirements.txt
 python -m pip check
 ```
 
-The repository is private, so cloning requires an authorized GitHub account. Alternatively, download and extract its ZIP, then open a terminal in the extracted folder. Check the version before creating the environment. If `python3` is outside 3.10–3.13, use a supported interpreter (for example `python3.13`) in both commands. On Windows, use `.venv\Scripts\activate` instead of `source`.
+The repository is public; cloning does not require a GitHub account. Alternatively, download and extract its ZIP, then open a terminal in the extracted folder. Check the version before creating the environment. If `python3` is outside 3.10–3.13, use a supported interpreter (for example `python3.13`) in both commands. On Windows, use `.venv\Scripts\activate` instead of `source`.
 
 **Check the complete workflow first** with one split and fewer initializations:
 
