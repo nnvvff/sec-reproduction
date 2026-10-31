@@ -9,7 +9,6 @@ from pathlib import Path
 import numpy as np
 import scipy
 import sklearn
-from sklearn.cluster import KMeans
 from sklearn.model_selection import KFold
 from threadpoolctl import threadpool_limits
 
@@ -19,19 +18,16 @@ from sec.data import SHA256, load_mnist
 from sec.metrics import clustering_accuracy
 
 ROOT = Path(__file__).resolve().parent
-METHODS = ("KMeans", "SC+ridge", "SEC/SC", "SEC/LR")
+METHODS = ("SEC/SC", "SEC/LR")
 MU_VALUES = (1e-9, 1e-6, 1e-3, 1., 1e3, 1e6, 1e9)
 
 
 def build_model(method, seed, n_init, mu=None):
-    if method == "KMeans":
-        return KMeans(n_clusters=10, init="random", n_init=n_init,
-                      random_state=seed, max_iter=300, tol=1e-4)
     if method not in METHODS:
         raise ValueError(f"Unknown method: {method}")
     return SpectralEmbeddedClustering(
         10, variant="lr" if method == "SEC/LR" else "sc",
-        mu=0 if method == "SC+ridge" else mu,
+        mu=mu,
         n_neighbors=5, scale_neighbor=7, lr_include_self=True,
         n_init=n_init, random_state=seed)
 
@@ -56,9 +52,7 @@ def select_mu(X_seen, y_seen, method, seed, n_init):
 
 
 def evaluate(X_seen, y_seen, X_test, y_test, method, seed, n_init):
-    mu, validation = None, None
-    if method in ("SEC/SC", "SEC/LR"):
-        mu, validation = select_mu(X_seen, y_seen, method, seed, n_init)
+    mu, validation = select_mu(X_seen, y_seen, method, seed, n_init)
     model = build_model(method, seed, n_init, mu).fit(X_seen)
     return dict(method=method, mu=mu, validation_means=validation,
                 train_acc=clustering_accuracy(y_seen, model.labels_),
