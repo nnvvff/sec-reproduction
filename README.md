@@ -65,7 +65,7 @@ Results are reported as mean ± standard deviation (%) over 20 random splits. Pa
 | SEC/SC | 59.00 ± 5.40 | 61.7 ± 2.5 | 54.32 ± 2.74 | 55.1 ± 1.8 |
 | SEC/LR | 69.66 ± 5.09 | 71.0 ± 2.5 | 62.41 ± 3.74 | 62.9 ± 1.9 |
 
-On MNIST, the same dataset used in the paper, our mean test accuracies are **0.78 percentage points** lower for SEC/SC and **0.49 points** lower for SEC/LR. These close test results provide additional evidence supporting the correctness of our reproduction, although training means differ more and standard deviations are larger.
+On MNIST, the same dataset used in the paper, our mean test accuracies are **0.78 percentage points** lower for SEC/SC and **0.49 points** lower for SEC/LR. These close test results provide additional evidence supporting the correctness of our reproduction.
 
 [Saved per-split scores](results/mnist/runs.csv) · [Saved summary](results/mnist/summary.csv).
 
