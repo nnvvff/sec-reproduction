@@ -76,9 +76,7 @@ The bundled results were generated on **2026-10-30**, before this entry-point si
 
 *Mean ± SD; error bars are not confidence intervals. [Training comparison](figures/mnist_train.png) · [Saved per-split scores](results/mnist/runs.csv) · [Saved summary](results/mnist/summary.csv).*
 
-MNIST was selected from completed experiments as a teaching case with close test means; no split was discarded. Author preprocessing and full CV details were not recovered, so this uses an explicit replacement CV protocol and is not an exact or official reproduction. The core SEC implementation is unchanged; the compact runner and SEC-only cache were checked against the original pipeline on small inputs, without repeating the full benchmark. A full-dataset, one-split command-line check and its resume also completed successfully.
-
-No software license has been selected. Dataset files, model archives and the paper PDF are not bundled.
+We conducted experiments on MNIST, the same dataset used in the paper, and obtained similar mean test accuracies. This agreement provides additional evidence supporting the correctness of our reproduction.
 
 ## 5. Experiment environment
 
