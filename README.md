@@ -2,7 +2,18 @@
 
 Independent Python reproduction of Nie et al., **Spectral Embedded Clustering: A Framework for In-Sample and Out-of-Sample Spectral Clustering**, *IEEE Transactions on Neural Networks*, 2011. [Paper / DOI](https://doi.org/10.1109/TNN.2011.2162000).
 
-## Installation and running
+## 1. File structure
+
+```text
+run_mnist.py       Single experiment entry point and result summary
+sec/               SEC algorithms, CV cache, MNIST loader and ACC
+requirements.txt   Four runtime dependencies
+results/mnist/     Saved 20-split results (not overwritten by new runs)
+figures/           Saved comparisons with the paper
+outputs/           Your new results and resume state (created at runtime)
+```
+
+## 2. Installation and running
 
 The experiment compares **KMeans, SC+ridge, SEC/SC and SEC/LR**. SEC combines local structure with global regression to cluster training samples and predict clusters for unseen samples. SC+ridge uses SEC/SC with μ = 0.
 
@@ -36,7 +47,7 @@ This still uses the full MNIST dataset and performs 46 fits, so allow time for C
 python run_mnist.py
 ```
 
-## Output
+## 3. Output
 
 With the default full-run command, the script downloads the [Keras-distributed MNIST archive](https://github.com/keras-team/keras/blob/master/keras/src/datasets/mnist.py), verifies its SHA-256, and runs **20 random splits with 50 initializations per fit**. It writes **newly computed results** to `outputs/mnist/`:
 
@@ -48,7 +59,7 @@ A full run performs 920 fits, including inner CV, and can take substantial CPU t
 
 **Protocol:** concatenate all 70,000 images, retain raw 0–255 pixels, and use 3,500 training / 66,500 test samples per split. Seeds are `20261029 + split`. SEC selects μ from `1e-9, 1e-6, 1e-3, 1, 1e3, 1e6, 1e9` by three-fold CV using training-internal validation labels; outer test data do not enter selection. Initializations are selected by optimization objective. SC uses a union 5-neighbor graph and seventh-neighbor scale; LR uses the center plus four neighbors.
 
-## Results and paper comparison
+## 4. Results and paper comparison
 
 The bundled results were generated on **2026-10-30**, before this entry-point simplification. Entries are **mean ± standard deviation (%)** over all 20 random splits; our SD uses `ddof=1`. Paper references are from Tables II and III. SC+ridge corresponds to SC for training and SEC/SC (μ → 0) for testing.
 
@@ -69,17 +80,6 @@ MNIST was selected from completed experiments as a teaching case with close test
 
 No software license has been selected. Dataset files, model archives and the paper PDF are not bundled.
 
-## Experiment environment
+## 5. Experiment environment
 
 **Environment for the saved results:** CPU execution, one numerical-library thread per fit; Python **3.10.12**, NumPy **2.1.3**, SciPy **1.15.3**, scikit-learn **1.6.1**, OpenBLAS **0.3.27**. Local refactoring checks used Python 3.13.5 on macOS. Floating-point results can vary across platforms; NumPy runtime warnings observed in the local environment did not prevent the checked numerical comparisons from passing.
-
-## File structure
-
-```text
-run_mnist.py       Single experiment entry point and result summary
-sec/               SEC algorithms, CV cache, MNIST loader and ACC
-requirements.txt   Four runtime dependencies
-results/mnist/     Saved 20-split results (not overwritten by new runs)
-figures/           Saved comparisons with the paper
-outputs/           Your new results and resume state (created at runtime)
-```
